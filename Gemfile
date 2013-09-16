@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 
 gem 'figaro'
+gem 'gengo'
 gem 'sqlite3'
 
 # Gems used only for assets and not required
