@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130916152224) do
+ActiveRecord::Schema.define(version: 20130923194131) do
+
+  create_table "english_words", force: true do |t|
+    t.text     "translatable_string"
+    t.text     "comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "gengo_responses", force: true do |t|
     t.text     "resp_text"
