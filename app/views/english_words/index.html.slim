@@ -1,11 +1,2 @@
 = link_to "Localizable format", "english_words/localizable"
-table
-  thead
-    tr
-      th Word
-      th Comment
-  tbody
-    - @english.each do |word|
-      tr
-        td= word.translatable_string
-        td= word.comment
+= render "/shared/display", words: @english

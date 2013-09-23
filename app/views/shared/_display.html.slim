@@ -1,0 +1,11 @@
+table
+  thead
+    tr
+      th Word
+      th Translation
+  tbody
+    - words.each do |word|
+      tr
+        td= word.translatable_string
+        td= word.translated_string
+

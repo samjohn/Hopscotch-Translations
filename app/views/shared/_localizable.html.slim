@@ -1,0 +1,13 @@
+- words.each do |word|
+  - if word.respond_to?(:comment)
+    | /*
+    = word.comment
+    | */
+    br
+  | "
+  = word.translatable_string
+  | " = "
+  = word.translated_string
+  | ";
+  br
+  br
