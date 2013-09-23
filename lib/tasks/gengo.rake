@@ -9,22 +9,27 @@ namespace :gengo do
 
     language_jobs = build_jobs
     language_jobs.each do |jobs|
-      puts gengo.postTranslationJobs({jobs: jobs})
-      puts "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      # puts gengo.postTranslationJobs({jobs: jobs})
     end
 
   end
   def build_jobs
-    languages = %w(ja zh da el es fr ko nl pt ru sv cs de he)
+    languages = LANGUAGES
     language_jobs = []
-    word_hash_array = [
-      {"word" => "hello world", "comment" => "foo bar"},
-      {"word" => "goodbye heaven", "comment" => "all good dogs go to heaven"}
-       }
-    ]
 
     languages.each do |language|
+      puts "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      puts language
       jobs = {}
+
+      word_hash_array = []
+      EnglishWord.all.each do |english_word|
+        translation = english_word.foreign_words.where("language = ?", language).first
+        if !translation
+          word_hash_array << { "word" => english_word.translatable_string, "comment" => english_word.comment}
+        end
+      end
+
       word_hash_array.each_with_index do |word, index|
         jobs["job_#{index + 1}"] = {
           type: "text",
@@ -33,10 +38,12 @@ namespace :gengo do
           body_src: word["word"],
           lc_src: "en",
           lc_tgt: language,
-          tier: "standard"
+          tier: "standard",
+          auto_approve: 1
         }
       end
       jobs["as_group"] = 1
+      puts word_hash_array.count
       language_jobs << jobs
     end
     language_jobs
