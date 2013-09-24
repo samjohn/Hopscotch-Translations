@@ -11,26 +11,22 @@ english_words = en_file.read.split(";")
 english_words.each do |word|
   comment_split = word.split("*")
   comment = comment_split[1]
-  puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-  puts "comment"
-  puts  comment
 
-  puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-  puts 'word'
   word_split = word.split("=")
-  english = word_split.last.split("\"")
-  puts english
+  english = word_split.last.split("\"").last
+  if !english.match(/\n/)
+    e = EnglishWord.new(comment: comment, translatable_string: english)
+    if (e.valid?)
+      e.save
+    else
+      puts "English: #{english} #{e.errors.full_messages}"
+    end
+  end
 
-  # e = EnglishWord.new(comment: comment, translatable_string: english)
-  # if (e.valid?)
-    # e.save
-  # else
-    # puts "English: #{english} #{e.errors.full_messages}"
-  # end
 end
 
 #create words for other languages
-languages = []#LANGUAGES
+languages = LANGUAGES
 language_folder_mappings = LANGUAGE_FOLDER_MAPPINGS
 
 languages.each do |language|
@@ -42,7 +38,6 @@ languages.each do |language|
 
   language_words.each do |word|
     if (word.length > 0)
-      puts word
       split_word = word.split("\"")
       english = split_word[1]
       translation = split_word[3]
