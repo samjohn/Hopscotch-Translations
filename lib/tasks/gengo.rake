@@ -43,7 +43,6 @@ def build_job_for(language)
       auto_approve: 1
     }
   end
-  # jobs["as_group"] = 1
   puts "#{language} #{word_hash_array.count}"
   jobs
 end
