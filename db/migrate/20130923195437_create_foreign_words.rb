@@ -8,7 +8,6 @@ class CreateForeignWords < ActiveRecord::Migration
       t.timestamps
     end
 
-    add_index :foreign_words, :
     add_index :foreign_words, [:translatable_string, :language], unique: true
     add_index :english_words, :translatable_string, unique: true
   end
