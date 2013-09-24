@@ -39,7 +39,8 @@ def build_job_for(language)
       body_src: word["word"],
       lc_src: "en",
       lc_tgt: language,
-      tier: "standard"
+      tier: "standard",
+      auto_approve: 1
     }
   end
   # jobs["as_group"] = 1
