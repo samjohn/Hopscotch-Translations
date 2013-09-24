@@ -6,6 +6,7 @@ gem 'rails', '4.0.0'
 gem 'figaro'
 gem 'gengo'
 gem 'slim-rails'
+gem 'transloadit'
 
 group :development do
   gem 'sqlite3'
