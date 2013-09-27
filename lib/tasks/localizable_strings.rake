@@ -26,8 +26,8 @@ namespace :localizable_strings do
 
       until response.finished?
         sleep 1; response.reload! # you'll want to implement a timeout in your production app
-        puts response
       end
+      puts response
     end
 
 
