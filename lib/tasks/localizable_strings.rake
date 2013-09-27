@@ -2,12 +2,11 @@ namespace :localizable_strings do
   desc "Write translation files"
   task write: :environment do
     languages = LANGUAGES
-    languages = ["ko"]
 
     languages.each do |language|
       transloadit = Transloadit.new(
-        :key    => TRANSLOADIT_AUTH_KEY,
-        :secret => TRANSLOADIT_AUTH_SECRET
+        :key    => TRANSLOADIT_KEY,
+        :secret => TRANSLOADIT_SECRET
       )
 
       timestamp = Time.now.strftime("%m-%d-%Y")
