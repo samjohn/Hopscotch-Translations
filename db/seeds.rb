@@ -1,8 +1,9 @@
 require 'open-uri'
 ForeignWord.delete_all
-file_root_url = "https://s3.amazonaws.com/hopscotchtranslations/en.lproj"
+EnglishWord.delete_all
+file_root_url = "https://s3.amazonaws.com/hopscotchtranslations/production/en.lproj"
 
-encoding = "UTF-16"
+encoding = ENCODING
 
 # create English Words
 

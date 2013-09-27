@@ -4,6 +4,15 @@ class ForeignWord < ActiveRecord::Base
   validates_uniqueness_of :translatable_string, :scope => :language
   validates :english_word, presence: true
 
+  def self.localizable_strings_for(language)
+    words = self.where("language = ?", language)
+    string = ""
+    words.each do |word|
+      string = "#{string}#{word.localizable_string}\n"
+    end
+    string
+  end
+
   def self.create_foreign_word_from_data(line, language)
     split_word = line.split("\"")
     english = split_word[1]
@@ -34,4 +43,19 @@ class ForeignWord < ActiveRecord::Base
 
     return language_words.split(";")
   end
+
+  def self.write_file_for_language(language)
+    encoding = ENCODING
+    local_file_path = Rails.root.join("tmp/#{language}", "Localizable.strings")
+    `mkdir tmp/#{language}`
+
+    open(local_file_path, "wb:#{encoding}") do |file|
+      file.print self.localizable_strings_for(language)
+    end
+  end
+
+  def localizable_string
+    "\"#{translatable_string}\" = \"#{translated_string}\";"
+  end
+
 end

@@ -11,8 +11,8 @@ namespace :gengo do
     end
   end
 
-  desc "view orders for all jobs"
-  task view_order_jobs: :environment do
+  desc "view all orders"
+  task view_orders: :environment do
     gengo = gengo_for_env
     orders = GengoOrder.all
 
@@ -22,36 +22,36 @@ namespace :gengo do
     end
   end
 
-  desc "Update jobs for all orders"
-  task update_order_jobs: :environment do
+  desc "Update or create jobs for all orders"
+  task sync_jobs_with_gengo: :environment do
     gengo = gengo_for_env
     orders = GengoOrder.all
     orders.each do |gengo_order|
       resp = gengo.getTranslationOrderJobs(order_id: gengo_order.order_id)
-      job_ids = resp["response"]["order"]["jobs_available"]
-      job_ids.each do |job_id|
-        job = gengo_order.gengo_jobs.build(job_id: job_id)
-        if (job.valid?)
-          job.save
-        else
-          puts job.errors.full_messages
-        end
+
+      available_job_ids = resp["response"]["order"]["jobs_available"]
+      available_job_ids.each do |job_id|
+        gengo_order.update_or_create_job_with_id_and_status(job_id, GengoJob::STATUS_AVAILABLE)
       end
-      gengo_order.update_attribute(:complete, true)
+
+      approved_job_ids = resp["response"]["order"]["jobs_approved"]
+      approved_job_ids.each do |job_id|
+        gengo_order.update_or_create_job_with_id_and_status(job_id, GengoJob::STATUS_APPROVED)
+      end
     end
   end
 
-  desc "check if jobs are complete"
-  task update_job_data: :environment do
+  desc "Sync words with complete jobs"
+  task sync_translations_with_jobs: :environment do
     gengo = gengo_for_env
 
-    jobs = GengoJob.where(completed: false)
+    jobs = GengoJob.approved.unsynced
     jobs.each do |gengo_job|
       resp = gengo.getTranslationJob(id: gengo_job.job_id)
       useful_response = resp["response"]["job"]
 
       status = useful_response["status"]
-      if status == "approved"
+      if status == GengoJob::STATUS_APPROVED
         lang = useful_response["lc_tgt"]
         translatable_string = useful_response["body_src"]
         translated_string = useful_response["body_tgt"]
@@ -67,6 +67,7 @@ namespace :gengo do
         end
       else
         puts status
+        gengo_job.update_attribute(:status, status)
       end
     end
   end
@@ -82,7 +83,6 @@ end
 
 def build_jobs
   languages = LANGUAGES
-  languages = ["ja"]
   language_jobs = []
 
   languages.each do |language|
@@ -127,4 +127,6 @@ def create_word_hash_for(language)
   end
   word_hash_array
 end
+
+
 

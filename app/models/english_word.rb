@@ -30,6 +30,9 @@ class EnglishWord < ActiveRecord::Base
         puts "English: #{english} #{e.errors.full_messages}"
       end
     end
+  end
 
+  def localizable_string
+    string = "\"#{translatable_string}\" = \"#{translatable_string}\";"
   end
 end
