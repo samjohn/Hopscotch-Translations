@@ -7,6 +7,7 @@ gem 'figaro'
 gem 'gengo'
 gem 'slim-rails'
 gem 'transloadit'
+gem 'rails_12factor'
 
 group :development do
   gem 'sqlite3'
