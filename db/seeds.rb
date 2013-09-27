@@ -1,7 +1,7 @@
 require 'open-uri'
 ForeignWord.delete_all
 EnglishWord.delete_all
-file_root_url = "https://s3.amazonaws.com/hopscotchtranslations/production/en.lproj"
+file_root_url = "https://s3.amazonaws.com/hopscotchtranslations/#{Rails.env}/en.lproj"
 
 encoding = ENCODING
 
