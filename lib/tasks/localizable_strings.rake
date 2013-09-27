@@ -10,7 +10,7 @@ namespace :localizable_strings do
       )
 
       timestamp = Time.now.strftime("%m-%d-%Y")
-      language_path = LANGUAGE_FOLDER_MAPPINGS[language]
+      language_path = LANGUAGE_FOLDER_MAPPINGS[language] || language
       path = "#{Rails.env}/en.lproj/#{language_path}.lproj/Localizable.strings"
       store  = transloadit.step("store", "/s3/store",
                                 :key    => AWS_KEY,
