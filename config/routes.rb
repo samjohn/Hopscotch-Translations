@@ -13,6 +13,5 @@ Translations::Application.routes.draw do
   end
 
   root to: "english_words#index"
-  resources :gengo_responses
 
 end
