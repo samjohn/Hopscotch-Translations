@@ -5,11 +5,13 @@ namespace :localizable_strings do
     languages = ["ko"]
 
     languages.each do |language|
-      transloadit = TRANSLOADIT
+      transloadit = Transloadit.new(
+        :key    => TRANSLOADIT_AUTH_KEY,
+        :secret => TRANSLOADIT_AUTH_SECRET
+      )
 
       timestamp = Time.now.strftime("%m-%d-%Y")
       path = "#{Rails.env}/en.lproj/#{language}.lproj/Localizable.strings"
-      puts path
       store  = transloadit.step("store", "/s3/store",
                                 :key    => AWS_KEY,
                                 :secret => AWS_SECRET,
