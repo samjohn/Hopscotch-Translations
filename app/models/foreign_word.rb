@@ -3,6 +3,9 @@ class ForeignWord < ActiveRecord::Base
   belongs_to :english_word, primary_key: :translatable_string, foreign_key: :translatable_string
   validates_uniqueness_of :translatable_string, :scope => :language
   validates :english_word, presence: true
+  scope :untranslated, -> { where("translated_string IS NULL") }
+  has_one :gengo_job
+  delegate :comment, to: :english_word
 
   def self.localizable_strings_for(language)
     words = self.where("language = ?", language)
@@ -56,6 +59,28 @@ class ForeignWord < ActiveRecord::Base
 
   def localizable_string
     "\"#{translatable_string}\" = \"#{translated_string}\";"
+  end
+
+  def gengo_hash
+    {
+      type: "text",
+      slug: language,
+      comment: comment,
+      body_src: translatable_string,
+      lc_src: "en",
+      lc_tgt: language,
+      tier: "standard",
+      auto_approve: 1
+    }
+  end
+
+  def needs_translation_job?
+    !doesnt_need_translation_job?
+  end
+
+  private
+  def doesnt_need_translation_job?
+    gengo_job || translatable_string.length < 2
   end
 
 end
