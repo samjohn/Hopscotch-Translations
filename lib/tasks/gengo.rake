@@ -74,14 +74,14 @@ def build_job_for_language(language)
   jobs = {}
 
   ForeignWord.untranslated.where(language: language).each_with_index do |foreign_word, index|
-    next if foreign_word.needs_translation_job?
+    next unless foreign_word.needs_translation_job?
 
     hash = foreign_word.gengo_hash
     jobs["job_#{index + 1}"]  = hash
   end
 
   puts "#{language} #{jobs.count}"
-  jobs
+  jobs.empty? ? nil : jobs
 end
 
 def view_orders
