@@ -58,26 +58,45 @@ def sync_translations_with_jobs
     lang = useful_response["lc_tgt"]
     translatable_string = useful_response["body_src"]
 
-    foreign_word = ForeignWord.where("language = ? AND translatable_string = ?",
-                          lang, translatable_string).first
-
-    foreign_word ||= ForeignWord.new(language: lang,
+    foreign_word = ForeignWord.new(language: lang,
                           translatable_string: translatable_string)
 
     if status == GengoJob::STATUS_APPROVED
       translated_string = useful_response["body_tgt"]
       f.translated_string = translated_string
 
+      if foreign_word.valid?
+        foreign_word.save
+        gengo_job.complete_if_approved!
+      else
+        puts f.errors.full_messages
+      end
     else
       gengo_job.update_attribute(:status, status)
     end
 
-    if foreign_word.valid?
-      foreign_word.save
-      gengo_job.complete_if_approved!
-    else
-      puts f.errors.full_messages
+    jobs = GengoJob.unsynced.available
+    jobs.each do |gengo_job|
+      resp = gengo.getTranslationJob(id: gengo_job.job_id)
+      useful_response = resp["response"]["job"]
+
+      status = useful_response["status"]
+      lang = useful_response["lc_tgt"]
+      foreign_word = ForeignWord.where("language = ? AND translatable_string = ?",
+                                       lang, translatable_string).first
+      if (!foreign_word)
+        foreign_word = ForeignWord.new(language: lang,
+                                       translatable_string: translatable_string)
+        if foreign_word.valid?
+          foreign_word.save
+          gengo_job.complete_if_approved!
+        else
+          puts f.errors.full_messages
+        end
+      end
+
     end
+
   end
 end
 

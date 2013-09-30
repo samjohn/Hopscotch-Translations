@@ -3,6 +3,7 @@ class GengoJob < ActiveRecord::Base
   STATUS_APPROVED = "approved"
   validates_uniqueness_of :job_id
   scope :approved, -> { where(status: STATUS_APPROVED) }
+  scope :approved, -> { where(status: STATUS_AVAILABLE) }
   scope :unsynced, -> { where(completed: false) }
 
   def complete_if_approved!
