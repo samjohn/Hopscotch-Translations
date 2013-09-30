@@ -28,12 +28,13 @@ namespace :gengo do
 end
 
 def gengo_for_env
-  if Rails.env.development?
-    GENGO_SANDBOX
-  else
+  if Rails.env.production?
     GENGO
+  else
+    GENGO_SANDBOX
   end
 end
+
 
 def translate
   gengo = gengo_for_env
