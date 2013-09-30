@@ -58,7 +58,11 @@ class ForeignWord < ActiveRecord::Base
   end
 
   def localizable_string
-    "\"#{translatable_string}\" = \"#{translated_string}\";"
+    if translated_string
+      "\"#{translatable_string}\" = \"#{translated_string}\";"
+    else
+      ""
+    end
   end
 
   def gengo_hash

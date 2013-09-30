@@ -3,11 +3,20 @@ require 'spec_helper'
 describe ForeignWord do
 
   describe "localizable_string" do
-    it "should return the correct string" do
-      foreign_word = ForeignWord.new(translatable_string: "Foo",
-                                     translated_string: "Bar")
-      expected_string = "\"Foo\" = \"Bar\";"
-      expect(foreign_word.localizable_string).to eq(expected_string)
+    context "the word is translated" do
+      it "should return the correct string" do
+        foreign_word = ForeignWord.new(translatable_string: "Foo",
+                                       translated_string: "Bar")
+        expected_string = "\"Foo\" = \"Bar\";"
+        expect(foreign_word.localizable_string).to eq(expected_string)
+      end
+    end
+
+    context "the word has not been translated" do
+      it "should return an empty string" do
+        foreign_word = ForeignWord.new(translatable_string: "Foo")
+        expect(foreign_word.localizable_string).to eq("")
+      end
     end
   end
 
