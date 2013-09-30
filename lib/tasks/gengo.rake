@@ -44,60 +44,16 @@ def translate
     order_id = resp["response"]["order_id"]
     job_count = resp["response"]["job_count"]
     order = GengoOrder.create(order_id: order_id, available_job_count: job_count)
+    puts "translated #{jobs.count} jobs"
   end
 end
 
 def sync_translations_with_jobs
   gengo = gengo_for_env
 
-  jobs = GengoJob.approved.unsynced
+  jobs = GengoJob.unsynced
   jobs.each do |gengo_job|
-    resp = gengo.getTranslationJob(id: gengo_job.job_id)
-    useful_response = resp["response"]["job"]
-
-    status = useful_response["status"]
-    lang = useful_response["lc_tgt"]
-    translatable_string = useful_response["body_src"]
-
-    foreign_word = ForeignWord.new(language: lang,
-                          translatable_string: translatable_string)
-
-    if status == GengoJob::STATUS_APPROVED
-      translated_string = useful_response["body_tgt"]
-      f.translated_string = translated_string
-
-      if foreign_word.valid?
-        foreign_word.save
-        gengo_job.complete_if_approved!
-      else
-        puts f.errors.full_messages
-      end
-    else
-      gengo_job.update_attribute(:status, status)
-    end
-
-    jobs = GengoJob.unsynced.available
-    jobs.each do |gengo_job|
-      resp = gengo.getTranslationJob(id: gengo_job.job_id)
-      useful_response = resp["response"]["job"]
-
-      status = useful_response["status"]
-      lang = useful_response["lc_tgt"]
-      foreign_word = ForeignWord.where("language = ? AND translatable_string = ?",
-                                       lang, translatable_string).first
-      if (!foreign_word)
-        foreign_word = ForeignWord.new(language: lang,
-                                       translatable_string: translatable_string)
-        if foreign_word.valid?
-          foreign_word.save
-          gengo_job.complete_if_approved!
-        else
-          puts f.errors.full_messages
-        end
-      end
-
-    end
-
+    gengo_job.sync_with_gengo_and_foreign_word(gengo)
   end
 end
 
@@ -105,65 +61,27 @@ def sync_jobs_with_gengo
   gengo = gengo_for_env
   orders = GengoOrder.all
   orders.each do |gengo_order|
-    resp = gengo.getTranslationOrderJobs(order_id: gengo_order.order_id)
-
-    available_job_ids = resp["response"]["order"]["jobs_available"]
-    available_job_ids.each do |job_id|
-      gengo_order.update_or_create_job_with_id_and_status(job_id, GengoJob::STATUS_AVAILABLE)
-    end
-
-    approved_job_ids = resp["response"]["order"]["jobs_approved"]
-    approved_job_ids.each do |job_id|
-      gengo_order.update_or_create_job_with_id_and_status(job_id, GengoJob::STATUS_APPROVED)
-    end
+    gengo_order.create_jobs_from_gengo(gengo)
   end
 end
 
 def build_jobs
-  languages = LANGUAGES
-  language_jobs = []
-
-  languages.each do |language|
-    job = build_job_for_language(language)
-    language_jobs << job unless job.empty?
-  end
-  language_jobs
+  jobs = LANGUAGES.map{ |language| build_job_for_language(language) }
+  jobs.compact
 end
 
 def build_job_for_language(language)
   jobs = {}
 
-  word_hash_array = create_word_hash_for(language)
+  ForeignWord.untranslated.where(language: language).each_with_index do |foreign_word, index|
+    next if foreign_word.needs_translation_job?
 
-  word_hash_array.each_with_index do |word, index|
-    jobs["job_#{index + 1}"] = {
-      type: "text",
-      slug: language,
-      comment: word["comment"],
-      body_src: word["word"],
-      lc_src: "en",
-      lc_tgt: language,
-      tier: "standard",
-      auto_approve: 1
-    }
+    hash = foreign_word.gengo_hash
+    jobs["job_#{index + 1}"]  = hash
   end
-  puts "#{language} #{word_hash_array.count}"
+
+  puts "#{language} #{jobs.count}"
   jobs
-end
-
-def create_word_hash_for(language)
-  word_hash_array = []
-
-  EnglishWord.all.each do |english_word|
-    translation = english_word.foreign_words.where("language = ?", language).first
-    if !translation
-      if (english_word.translatable_string != ".")
-        word = english_word.translatable_string
-        word_hash_array << { "word" => word, "comment" => english_word.comment}
-      end
-    end
-  end
-  word_hash_array
 end
 
 def view_orders
