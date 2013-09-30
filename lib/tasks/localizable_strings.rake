@@ -24,7 +24,11 @@ namespace :localizable_strings do
 
       response = assembly.submit! open(Rails.root.join("tmp/#{language}/Localizable.strings"))
 
-      until response.finished?
+      puts "submitting file for: #{language}"
+      wait = 0
+      until response.finished? || wait > 10
+        puts response["message"]
+        wait += 1
         sleep 1; response.reload! # you'll want to implement a timeout in your production app
       end
       puts "#{response["message"]} language: #{language}"
