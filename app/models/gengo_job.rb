@@ -8,7 +8,7 @@ class GengoJob < ActiveRecord::Base
 
   def complete_if_approved!
     if status == STATUS_APPROVED
-      update_attribute(:complete, true)
+      update_attribute(:completed, true)
     end
   end
 end
