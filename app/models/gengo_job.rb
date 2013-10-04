@@ -27,7 +27,7 @@ class GengoJob < ActiveRecord::Base
                                      translatable_string: translatable_string).first
 
     foreign_word ||= self.build_foreign_word(language: language,
-                                                  translaotable_string: translatable_string)
+                                                  translatable_string: translatable_string)
 
     foreign_word.translated_string = translated_string
     self.foreign_word = foreign_word
