@@ -1,5 +1,19 @@
 namespace :gengo do
   desc "Order translations"
+
+  task number_of_translations_needed: :environment do
+    language_jobs = build_jobs
+    num_translations = 0
+    index = 0
+    language_jobs.each do |jobs|
+      num_translations += jobs.count
+      language = LANGUAGES[index]
+      puts "translation needed for #{jobs.count} jobs for #{language}"
+      index += 1
+    end
+    puts "translation needed for #{num_translations} total"
+  end
+
   task translate: :environment do
     translate
   end
@@ -39,7 +53,6 @@ def gengo_for_env
     GENGO_SANDBOX
   end
 end
-
 
 def translate
   gengo = gengo_for_env
