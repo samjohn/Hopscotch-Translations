@@ -19,6 +19,11 @@ namespace :gengo do
     sync_translations_with_jobs
   end
 
+  desc "sync local jobs with translations"
+  task sync_local_jobs_with_translations: :environment do
+    sync_local_jobs_with_translations
+  end
+
   desc "Sync with gengo then sync with db then translate"
   task sync_all: :environment do
     sync_jobs_with_gengo
@@ -45,6 +50,14 @@ def translate
     job_count = resp["response"]["job_count"]
     order = GengoOrder.create(order_id: order_id, available_job_count: job_count)
     puts "translated #{jobs.count} jobs"
+  end
+end
+
+def sync_local_jobs_with_translations
+  gengo = gengo_for_env
+  jobs = GengoJob.approved.locally_unsynced
+  jobs.each do |gengo_job|
+    gengo_job.sync_with_foreign_word(gengo)
   end
 end
 
