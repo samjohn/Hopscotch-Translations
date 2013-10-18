@@ -1,4 +1,4 @@
-environment_id="2.0.0-p0@translations"
+environment_id="2.0.0-p247@translations"
 if [[ -d "${rvm_path:-$HOME/.rvm}/environments" \
   && -s "${rvm_path:-$HOME/.rvm}/environments/$environment_id" ]] ; then
   \. "${rvm_path:-$HOME/.rvm}/environments/$environment_id"
