@@ -1,6 +1,5 @@
 namespace :gengo do
-  desc "Order translations"
-
+  desc "Show how many translations are needed"
   task number_of_translations_needed: :environment do
     language_jobs = build_jobs
     num_translations = 0
@@ -14,6 +13,7 @@ namespace :gengo do
     puts "translation needed for #{num_translations} total"
   end
 
+  desc "Order translations"
   task translate: :environment do
     translate
   end
