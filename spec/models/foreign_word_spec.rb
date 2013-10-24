@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe ForeignWord do
-  describe "create_foreign_word_from_data" do
+  describe ".create_foreign_word_from_data" do
     before do
       english = EnglishWord.create("translatable_string" => "Dismiss")
       expect(english.reload).to be
@@ -25,7 +25,35 @@ describe ForeignWord do
     end
   end
   
-  describe "translated_string" do
+  describe ".untranslated" do
+    context 'there are no untranslated ForeignWords' do
+      it "should return an empty list" do
+        expect(ForeignWord.untranslated.count).to eq(0)
+      end
+    end
+
+    context 'there are untranslated ForeignWords' do
+      before do
+        english = EnglishWord.create("translatable_string" => "Dismiss")
+        expect(english.reload).to be
+        
+        english = EnglishWord.create("translatable_string" => "second word")
+        expect(english.reload).to be
+      end
+    
+      let(:line) { "\"Dismiss\" = \"Убрать\";" }
+      let(:language) {"ru" }
+      
+      it "should return only the foreign words without submissions" do
+        foreign_word1 = ForeignWord.create_foreign_word_from_data(line, language)
+        foreign_word2 = ForeignWord.create(translatable_string: "second word", language: "el")
+        expect(ForeignWord.untranslated.map(&:translatable_string)).to include(foreign_word2.translatable_string)
+        expect(ForeignWord.untranslated.map(&:translatable_string)).not_to include(foreign_word1.translatable_string)
+      end
+    end  
+  end
+  
+  describe "#translated_string" do
     before do
       english = EnglishWord.create("translatable_string" => "Baz")
       expect(english.reload).to be
