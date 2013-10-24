@@ -1,0 +1,13 @@
+.edit {
+	margin-left: 10px;
+}
+
+body {
+	font-size: 22px;
+	font-family: "Helvetica-Nueue", "HelveticaNeue", "Helvetica", "Sans-serif";
+	max-width: 1024px;
+}
+
+table td {
+	border-bottom: 2px solid #ddd;
+}
