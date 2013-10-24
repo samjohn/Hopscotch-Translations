@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130930185411) do
+ActiveRecord::Schema.define(version: 20131024182831) do
 
   create_table "english_words", force: true do |t|
     t.text     "translatable_string"
@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 20130930185411) do
   create_table "foreign_words", force: true do |t|
     t.text     "translatable_string"
     t.string   "language"
-    t.text     "translated_string"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -56,5 +55,13 @@ ActiveRecord::Schema.define(version: 20130930185411) do
   end
 
   add_index "gengo_orders", ["order_id"], name: "index_gengo_orders_on_order_id", unique: true
+
+  create_table "submissions", force: true do |t|
+    t.text     "translated_string"
+    t.string   "contributor"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "foreign_word_id"
+  end
 
 end

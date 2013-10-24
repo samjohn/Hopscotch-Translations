@@ -6,6 +6,7 @@ class ForeignWord < ActiveRecord::Base
   scope :untranslated, -> { where("translated_string IS NULL") }
   has_one :gengo_job
   delegate :comment, to: :english_word
+  has_many :submissions, -> { order("created_at DESC") }
 
   def self.localizable_strings_for(language)
     words = self.where("language = ?", language)
@@ -21,13 +22,13 @@ class ForeignWord < ActiveRecord::Base
     english = split_word[1]
     translation = split_word[3]
 
-    f = self.new(translatable_string: english,
-                        language: language,
-                        translated_string: translation)
+    f = self.new(translatable_string: english, language: language)
+    f.submissions.build(translated_string: translation)
     if (f.valid?)
       f.save
+      f
     else
-      puts "#{language}, #{english} #{f.errors.full_messages}"
+      puts "Invalid: #{language}, #{english} #{f.errors.full_messages}"
     end
   end
 
@@ -56,6 +57,14 @@ class ForeignWord < ActiveRecord::Base
     open(local_file_path, "wb:#{encoding}") do |file|
       file.print self.localizable_strings_for(language)
     end
+  end
+
+  def translated_string
+    submissions.first.try(:translated_string)
+  end
+  
+  def translated_string=(_translated_string)
+    submissions.build(:translated_string => _translated_string)
   end
 
   def localizable_string
