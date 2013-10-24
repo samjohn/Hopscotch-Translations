@@ -35,6 +35,7 @@ class ForeignWord < ActiveRecord::Base
     language_folder = LANGUAGE_FOLDER_MAPPINGS[language] || language
     language_file_path = "#{file_root_url}/#{language_folder}.lproj/Localizable.strings"
     puts language_file_path
+    `mkdir tmp`
     local_file_path = Rails.root.join("tmp", "localizable.strings")
 
     open(local_file_path, "wb:#{encoding}") do |file|
@@ -50,7 +51,7 @@ class ForeignWord < ActiveRecord::Base
   def self.write_file_for_language(language)
     encoding = ENCODING
     local_file_path = Rails.root.join("tmp/#{language}", "Localizable.strings")
-    `mkdir tmp/#{language}`
+    `mkdir -p tmp/#{language}`
 
     open(local_file_path, "wb:#{encoding}") do |file|
       file.print self.localizable_strings_for(language)
