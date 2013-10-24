@@ -9,14 +9,22 @@ class ForeignWordsController < ApplicationController
     lang = params[:language]
 
     @words = ForeignWord.where("language=?", lang)
+
+    @words.sort! do |word1, word2|
+      if (word1.translated_string.blank? )
+        -1
+      else
+        1
+      end
+    end
   end
 
   def update
     f = ForeignWord.find(params[:id])
-    
+
     attrs =  ActionController::Parameters.new(params[:foreign_word])
     attrs.permit!
-    
+
     if f.update_attributes(attrs)
       render text: "success"
     else
