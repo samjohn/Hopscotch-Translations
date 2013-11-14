@@ -1,13 +1,13 @@
 .edit {
-	margin-left: 10px;
+  margin-left: 10px;
 }
 
 body {
-	font-size: 22px;
-	font-family: sans-serif;
-	max-width: 1024px;
+  font-size: 22px;
+  font-family: sans-serif;
+  max-width: 1024px;
 }
 
 table td {
-	border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
 }
