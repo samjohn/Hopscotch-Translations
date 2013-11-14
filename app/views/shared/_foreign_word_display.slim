@@ -3,12 +3,13 @@ table
     tr
       th Word
       th Translation
+      th Notes
   tbody
     - words.each do |word|
       tr
         td= word.translatable_string
         td
-					= best_in_place(word, :translated_string, html_attrs: { class: "foo"}, activator: "#edit-#{word.id}" )
-					= image_tag("pencil.png", id: "edit-#{word.id}", class: "edit")
-				
+          = best_in_place(word, :translated_string, html_attrs: { class: "foo"}, activator: "#edit-#{word.id}" )
+          = image_tag("pencil.png", id: "edit-#{word.id}", class: "edit")
+        td= word.comment
 
