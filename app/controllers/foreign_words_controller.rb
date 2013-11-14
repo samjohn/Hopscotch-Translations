@@ -3,6 +3,23 @@ class ForeignWordsController < ApplicationController
 
   def index
     @languages = ForeignWord.uniq.pluck(:language)
+    @language_mappings = {
+      cs: "Czech",
+      pt: "Portuguese",
+      da: "Danish",
+      el: "Greek",
+      ko: "Korean",
+      fi: "Finnish",
+      sv: "Swedish",
+      :"zh-tw" => "Chinese Traditional",
+      de: "German",
+      ru: "Russian",
+      zh: "Chinese Simplified",
+      fr: "French",
+      ja: "Japanese",
+      he: "Hebrew",
+      es: "Spanish",
+      nl: "Dutch" }
   end
 
   def language
