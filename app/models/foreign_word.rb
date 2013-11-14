@@ -8,7 +8,9 @@ class ForeignWord < ActiveRecord::Base
   has_many :submissions, -> { order("created_at DESC") }
 
   def self.untranslated
-    ForeignWord.find_by_sql("select * from foreign_words where id not in (select foreign_word_id from submissions)")
+    ForeignWord.find_by_sql("select * from foreign_words where id not in (select foreign_word_id from submissions)").select do |w|
+      w.valid?
+    end
   end
 
   def self.localizable_strings_for(language)
