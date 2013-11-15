@@ -47,12 +47,14 @@ class GengoJob < ActiveRecord::Base
     self.status = useful_response["status"]
     language = useful_response["lc_tgt"]
     translatable_string = useful_response["body_src"]
+    translated_string = useful_response["body_tgt"]
 
     self.foreign_word = ForeignWord.where(language: language,
                                      translatable_string: translatable_string).first
 
     self.foreign_word ||= self.build_foreign_word(language: language,
                                                   translatable_string: translatable_string)
+    self.foreign_word.translated_string = translated_string
     self.completed = self.status == GengoJob::STATUS_APPROVED
     save
   end

@@ -94,6 +94,13 @@ describe GengoJob do
         job.sync_with_gengo_and_foreign_word(gengo)
         expect(job.reload.completed).to be_true
       end
+
+      it "should update the foreign word translated string" do
+        job.sync_with_gengo_and_foreign_word(gengo)
+        foreign_word = job.reload.foreign_word
+        expect(foreign_word.translated_string).to eq(translated_string)
+      end
+
     end
   end
 
