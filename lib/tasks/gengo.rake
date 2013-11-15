@@ -33,9 +33,16 @@ namespace :gengo do
     sync_translations_with_jobs
   end
 
-  desc "sync local jobs with translations"
-  task sync_local_jobs_with_translations: :environment do
-    sync_local_jobs_with_translations
+  # desc "sync local jobs with translations"
+  # task sync_local_jobs_with_translations: :environment do
+    # sync_local_jobs_with_translations
+  # end
+  #
+  desc "Make sure all gengo jobs actually set the translated string on foreign words"
+  task resync_all: :environment do
+    GengoJob.approved.each do |job|
+      job.sync_with_foreign_word(gengo_for_env)
+    end
   end
 
   desc "Sync with gengo then sync with db then translate"
