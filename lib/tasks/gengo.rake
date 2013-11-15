@@ -42,7 +42,6 @@ namespace :gengo do
   task sync_all: :environment do
     sync_jobs_with_gengo
     sync_translations_with_jobs
-    translate
   end
 end
 
