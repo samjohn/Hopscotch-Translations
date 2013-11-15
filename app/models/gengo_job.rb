@@ -17,6 +17,11 @@ class GengoJob < ActiveRecord::Base
   end
 
   def sync_with_foreign_word(gengo)
+
+    if (self.foreign_word && self.foreign_word.translated_string)
+      return
+    end
+
     useful_response = sync_with_gengo(gengo)
     self.status = useful_response["status"]
     language = useful_response["lc_tgt"]

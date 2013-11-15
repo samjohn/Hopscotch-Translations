@@ -133,18 +133,58 @@ describe GengoJob do
 
     before do
       EnglishWord.create(translatable_string: translatable_string, comment: "Bar")
-
-      gengo.better_receive(:getTranslationJob).with(id: job_id).and_return(job_response)
     end
 
+    context "the job has not matched with a foreign word" do
+      before do
+        gengo.better_receive(:getTranslationJob).with(id: job_id).and_return(job_response)
+      end
 
-    it "should pull down its data and find a foreign word to match" do
-      foreign_word = ForeignWord.create(translatable_string: translatable_string, language: language)
-      job.sync_with_foreign_word(gengo)
+      it "should pull down its data and find a foreign word to match" do
+        foreign_word = ForeignWord.create(translatable_string: translatable_string, language: language)
+        job.sync_with_foreign_word(gengo)
 
-      expect(job.reload.foreign_word).to eq(foreign_word)
-      expect(foreign_word.reload.translated_string).to eq(translated_string)
+        expect(job.reload.foreign_word).to eq(foreign_word)
+        expect(foreign_word.reload.translated_string).to eq(translated_string)
 
+      end
+    end
+
+    context "the job has matched up with a foreign word" do
+      context "the foreign word is untranslated" do
+        before do
+          gengo.better_receive(:getTranslationJob).with(id: job_id).and_return(job_response)
+        end
+
+        it "should update that foreign word's translated string" do
+          foreign_word = ForeignWord.create(translatable_string: translatable_string, language: language)
+          foreign_word.gengo_job = job
+          foreign_word.save
+          expect(foreign_word.translated_string).to be_nil
+
+          job.sync_with_foreign_word(gengo)
+
+          expect(foreign_word.translated_string).to eq(translated_string)
+        end
+      end
+
+      context "the foreign word is translated" do
+        before do
+          gengo.should_not_receive(:getTranslationJob).with(id: job_id)
+        end
+
+        it "should update that foreign word's translated string" do
+          foreign_word = ForeignWord.create(translatable_string: translatable_string, language: language)
+          foreign_word.translated_string = "foo"
+          foreign_word.gengo_job = job
+          foreign_word.save
+          expect(foreign_word.translated_string).to eq("foo")
+
+          job.sync_with_foreign_word(gengo)
+
+          expect(foreign_word.translated_string).to eq("foo")
+        end
+      end
     end
   end
 
