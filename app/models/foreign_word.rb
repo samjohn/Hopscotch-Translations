@@ -8,9 +8,7 @@ class ForeignWord < ActiveRecord::Base
   has_many :submissions, -> { order("created_at DESC") }
 
   def self.untranslated
-    ForeignWord.find_by_sql("select * from foreign_words where id not in (select foreign_word_id from submissions)").select do |w|
-      w.valid?
-    end
+    ForeignWord.joins("LEFT OUTER JOIN submissions ON foreign_words.id = submissions.foreign_word_id").where("submissions.foreign_word_id IS NULL")
   end
 
   def self.localizable_strings_for(language)
@@ -67,7 +65,7 @@ class ForeignWord < ActiveRecord::Base
   def translated_string
     submissions.first.try(:translated_string)
   end
-  
+
   def translated_string=(_translated_string)
     submissions.build(:translated_string => _translated_string)
   end
@@ -99,7 +97,7 @@ class ForeignWord < ActiveRecord::Base
 
   private
   def doesnt_need_translation_job?
-    gengo_job || translatable_string.length < 2
+    gengo_job || translatable_string.length < 2 || !valid?
   end
 
 end

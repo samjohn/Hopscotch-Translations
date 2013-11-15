@@ -6,26 +6,31 @@ describe ForeignWord do
       english = EnglishWord.create("translatable_string" => "Dismiss")
       expect(english.reload).to be
     end
-    
+
     let(:line) { "\"Dismiss\" = \"Убрать\";" }
     let(:language) {"ru" }
     it "should create a foreign word based on the line in the file" do
       foreign_word = ForeignWord.create_foreign_word_from_data(line, language)
       foreign_word.reload
       expect(foreign_word.language).to eq(language)
-      expect(foreign_word.translatable_string).to eq("Dismiss")        
+      expect(foreign_word.translatable_string).to eq("Dismiss")
     end
-      
+
     it "should create a related submission with the correct translated string" do
       foreign_word = ForeignWord.create_foreign_word_from_data(line, language)
       foreign_word.reload
       submission = foreign_word.submissions.first
-      
+
       expect(submission.translated_string).to eq("Убрать")
     end
   end
-  
+
   describe ".untranslated" do
+
+    it  "should return an activeRecord::Relation" do
+      expect(ForeignWord.untranslated).to be_kind_of(ActiveRecord::Relation)
+    end
+
     context 'there are no untranslated ForeignWords' do
       it "should return an empty list" do
         expect(ForeignWord.untranslated.count).to eq(0)
@@ -36,36 +41,36 @@ describe ForeignWord do
       before do
         english = EnglishWord.create("translatable_string" => "Dismiss")
         expect(english.reload).to be
-        
+
         english = EnglishWord.create("translatable_string" => "second word")
         expect(english.reload).to be
       end
-    
+
       let(:line) { "\"Dismiss\" = \"Убрать\";" }
       let(:language) {"ru" }
-      
+
       it "should return only the foreign words without submissions" do
-        foreign_word1 = ForeignWord.create_foreign_word_from_data(line, language)
-        foreign_word2 = ForeignWord.create(translatable_string: "second word", language: "el")
-        expect(ForeignWord.untranslated.map(&:translatable_string)).to include(foreign_word2.translatable_string)
-        expect(ForeignWord.untranslated.map(&:translatable_string)).not_to include(foreign_word1.translatable_string)
+        foreign_word_translated = ForeignWord.create_foreign_word_from_data(line, language)
+        foreign_word_untranslated = ForeignWord.create(translatable_string: "second word", language: "el")
+        expect(ForeignWord.untranslated.map(&:translatable_string)).to include(foreign_word_untranslated.translatable_string)
+        expect(ForeignWord.untranslated.map(&:translatable_string)).not_to include(foreign_word_translated.translatable_string)
       end
-    end  
+    end
   end
-  
+
   describe "#translated_string" do
     before do
       english = EnglishWord.create("translatable_string" => "Baz")
       expect(english.reload).to be
     end
-    
+
     context "there are no submissions related to the foreign word" do
       it "should return nil" do
         foreign_word = ForeignWord.create(:translatable_string => 'Baz', :language => 'es')
         expect(foreign_word.translated_string).to be_nil
       end
     end
-    
+
     context "there is one submission" do
       it "should return the submission" do
         foreign_word = ForeignWord.create(:translatable_string => 'Baz', :language => 'es')
@@ -73,7 +78,7 @@ describe ForeignWord do
         expect(foreign_word.translated_string).to eq('Lunch')
       end
     end
-    
+
     context "there are many submissions" do
       it "should return the most recent submission" do
         foreign_word = ForeignWord.new(:translatable_string => 'Baz', :language => 'es')
@@ -81,31 +86,31 @@ describe ForeignWord do
         submission2 = foreign_word.submissions.build(:translated_string => "Brunch", :created_at => Time.now)
         submission3 = foreign_word.submissions.build(:translated_string => "Dinner", :created_at => 3.days.ago)
         foreign_word.save
-        
+
         expect(foreign_word.reload.translated_string).to eq('Brunch')
       end
     end
   end
-  
+
   describe "translated_string=" do
     before do
       english = EnglishWord.create("translatable_string" => "Baz")
       expect(english.reload).to be
     end
-    
+
     it  "should create a submission for the foreign word" do
       foreign_word = ForeignWord.new(:translatable_string => 'Baz', :language => 'es')
       foreign_word.translated_string = "Qux"
       expect(foreign_word.submissions.first.translated_string).to eq("Qux")
     end
   end
-  
+
   describe "localizable_string" do
     before do
       english = EnglishWord.create("translatable_string" => "Foo")
       expect(english.reload).to be
     end
-    
+
     let(:line) { "\"Foo\" = \"Bar\";" }
     let(:language) {"pt" }
     context "the word is translated" do
@@ -151,8 +156,18 @@ describe ForeignWord do
     context "there is a gengo job already associated" do
       it "should return false" do
         foreign_word = ForeignWord.new(translatable_string: "foo", language:"cs")
+        EnglishWord.create(translatable_string: foreign_word.translatable_string)
+        expect(foreign_word.needs_translation_job?).to be_true
+
         foreign_word.gengo_job = GengoJob.new
 
+        expect(foreign_word.needs_translation_job?).to be_false
+      end
+    end
+
+    context "the word is not valid" do
+      it  "should return false" do
+        foreign_word = ForeignWord.new(translatable_string: "foo", language:"cs")
         expect(foreign_word.needs_translation_job?).to be_false
       end
     end
@@ -161,6 +176,7 @@ describe ForeignWord do
       let(:foreign_word) { ForeignWord.new(translatable_string: "oooo", language:"cs") }
 
       it "should return true" do
+        EnglishWord.create(translatable_string: foreign_word.translatable_string)
         expect(foreign_word.needs_translation_job?).to be_true
       end
 
