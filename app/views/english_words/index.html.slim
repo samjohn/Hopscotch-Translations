@@ -1,3 +1,8 @@
 p= link_to "Other languages", foreign_words_path
 p= link_to "Localizable format", "english_words/localizable"
 = render "/shared/display", words: @english
+
+= form_for EnglishWord.new(non_app_string: true) do |f|
+  = f.text_area :translatable_string
+  = f.hidden_field :non_app_string
+  = f.submit
