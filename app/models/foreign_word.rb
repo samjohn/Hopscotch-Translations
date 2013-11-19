@@ -8,15 +8,19 @@ class ForeignWord < ActiveRecord::Base
   has_many :submissions, -> { order("created_at DESC") }
 
   def self.delete_all_app_strings
-    self.joins(:english_word).where("english_words.non_app_string = ? || english_words.non_app_string IS NULL", false).delete_all
+    self.words_for_app.delete_all
   end
 
   def self.untranslated
     ForeignWord.joins("LEFT OUTER JOIN submissions ON foreign_words.id = submissions.foreign_word_id").where("submissions.foreign_word_id IS NULL")
   end
 
+  def self.words_for_app
+    self.joins(:english_word).where("english_words.non_app_string = ? || english_words.non_app_string IS NULL", false)
+  end
+
   def self.localizable_strings_for(language)
-    words = self.where("language = ?", language)
+    words = self.where("language = ?", language).words_for_app
     string = ""
     words.each do |word|
       string = "#{string}#{word.localizable_string}\n"
