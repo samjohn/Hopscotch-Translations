@@ -6,6 +6,26 @@ class EnglishWord < ActiveRecord::Base
     self.where("non_app_string = ? || non_app_string IS NULL", false).delete_all
   end
 
+  def self.create_foreign_words
+    languages = LANGUAGES
+    self.all.each do |english_word|
+      languages.each do |language|
+        if (ForeignWord.where("language = ? AND translatable_string = ?",
+                              language,
+                              english_word.translatable_string).count == 0)
+          f = ForeignWord.new(language: language,
+                              translatable_string: english_word.translatable_string)
+          if (f.valid?)
+            f.save
+          else
+            put f.errors.full_messages
+          end
+        end
+
+      end
+    end
+  end
+
   def translated_string
     translatable_string
   end
@@ -39,4 +59,5 @@ class EnglishWord < ActiveRecord::Base
   def localizable_string
     string = "\"#{translatable_string}\" = \"#{translatable_string}\";"
   end
+
 end

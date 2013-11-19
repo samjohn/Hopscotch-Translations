@@ -28,20 +28,7 @@ languages.each do |language|
   end
 end
 
-EnglishWord.all.each do |english_word|
-  languages.each do |language|
-    if (ForeignWord.where("language = ? AND translatable_string = ?",
-                           language,
-                           english_word.translatable_string).count == 0)
-      f = ForeignWord.new(language: language,
-                          translatable_string: english_word.translatable_string)
-      if (f.valid?)
-        f.save
-      else
-        put f.errors.full_messages
-      end
-    end
+EnglishWord.create_foreign_words
 
-  end
 end
 
