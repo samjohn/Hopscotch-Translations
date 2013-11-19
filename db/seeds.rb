@@ -1,6 +1,6 @@
 require 'open-uri'
-ForeignWord.delete_all
-EnglishWord.delete_all
+ForeignWord.delete_all_app_strings
+EnglishWord.delete_all_app_strings
 file_root_url = "https://s3.amazonaws.com/hopscotchtranslations/#{Rails.env}/en.lproj"
 
 encoding = ENCODING

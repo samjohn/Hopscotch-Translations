@@ -7,6 +7,10 @@ class ForeignWord < ActiveRecord::Base
   delegate :comment, to: :english_word
   has_many :submissions, -> { order("created_at DESC") }
 
+  def self.delete_all_app_strings
+    self.joins(:english_word).where("english_words.non_app_string = ? || english_words.non_app_string IS NULL", false).delete_all
+  end
+
   def self.untranslated
     ForeignWord.joins("LEFT OUTER JOIN submissions ON foreign_words.id = submissions.foreign_word_id").where("submissions.foreign_word_id IS NULL")
   end

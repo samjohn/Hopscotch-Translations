@@ -1,6 +1,25 @@
 require 'spec_helper'
 
 describe ForeignWord do
+
+  describe ".delete_all_app_strings" do
+    it "should not delete words that have the flag" do
+      app_string = "foo"
+      english = EnglishWord.create("translatable_string" => app_string)
+      foreign_word = ForeignWord.create(translatable_string: app_string)
+
+      non_localizable_string = "Dismiss"
+      english_non_localizable = EnglishWord.create("translatable_string" => non_localizable_string, non_app_string: true)
+      foreign_non_localizable = ForeignWord.create(translatable_string: non_localizable_string, language: "es")
+
+      expect(ForeignWord.count).to eq(2)
+
+      ForeignWord.delete_all_app_strings
+      expect(ForeignWord.count).to eq(1)
+      expect(foreign_non_localizable.reload).to be
+    end
+  end
+
   describe ".create_foreign_word_from_data" do
     before do
       english = EnglishWord.create("translatable_string" => "Dismiss")

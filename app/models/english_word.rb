@@ -2,6 +2,10 @@ class EnglishWord < ActiveRecord::Base
   validates_uniqueness_of :translatable_string, presence: true
   has_many :foreign_words, primary_key: :translatable_string, foreign_key: :translatable_string
 
+  def self.delete_all_app_strings
+    self.where("non_app_string = ? || non_app_string IS NULL", false).delete_all
+  end
+
   def translated_string
     translatable_string
   end

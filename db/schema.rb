@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131024182831) do
+ActiveRecord::Schema.define(version: 20131119194423) do
 
   create_table "english_words", force: true do |t|
     t.text     "translatable_string"
     t.text     "comment"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "non_app_string"
   end
 
   add_index "english_words", ["translatable_string"], name: "index_english_words_on_translatable_string", unique: true
