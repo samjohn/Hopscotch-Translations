@@ -29,6 +29,3 @@ languages.each do |language|
 end
 
 EnglishWord.create_foreign_words
-
-end
-
