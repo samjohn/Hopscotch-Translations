@@ -16,7 +16,7 @@ class ForeignWord < ActiveRecord::Base
   end
 
   def self.words_for_app
-    self.joins(:english_word).where("english_words.non_app_string = ? || english_words.non_app_string IS NULL", false)
+    self.joins(:english_word).where("english_words.non_app_string = ? OR english_words.non_app_string IS NULL", false)
   end
 
   def self.localizable_strings_for(language)
