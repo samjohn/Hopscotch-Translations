@@ -94,8 +94,8 @@ class ForeignWord < ActiveRecord::Base
       body_src: translatable_string,
       lc_src: "en",
       lc_tgt: language,
-      tier: "standard",
-      auto_approve: 1
+      tier: "ultra",
+      auto_approve: 0
     }
   end
 
