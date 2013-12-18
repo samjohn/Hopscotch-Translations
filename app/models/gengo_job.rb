@@ -28,6 +28,10 @@ class GengoJob < ActiveRecord::Base
     translatable_string = useful_response["body_src"]
     translated_string = useful_response["body_tgt"]
 
+    if !LANGUAGES.include?(language)
+        return
+    end
+
     foreign_word = ForeignWord.where(language: language,
                                      translatable_string: translatable_string).first
 
