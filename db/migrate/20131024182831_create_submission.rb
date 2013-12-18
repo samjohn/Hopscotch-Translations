@@ -8,6 +8,5 @@ class CreateSubmission < ActiveRecord::Migration
     end
 
     remove_column :foreign_words, :translated_string
-    
   end
 end

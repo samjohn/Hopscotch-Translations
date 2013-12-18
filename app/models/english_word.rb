@@ -3,7 +3,7 @@ class EnglishWord < ActiveRecord::Base
   has_many :foreign_words, primary_key: :translatable_string, foreign_key: :translatable_string
 
   def self.delete_all_app_strings
-    self.where("non_app_string = ? || non_app_string IS NULL", false).delete_all
+    self.where("non_app_string = ? OR non_app_string IS NULL", false).delete_all
   end
 
   def self.create_foreign_words
