@@ -105,7 +105,7 @@ class ForeignWord < ActiveRecord::Base
 
   private
   def doesnt_need_translation_job?
-    gengo_job || translatable_string.length < 2 || !valid?
+    translatable_string.length < 2 || !valid?
   end
 
 end
