@@ -64,7 +64,7 @@ def translate
   gengo = gengo_for_env
   language_jobs = build_jobs
   language_jobs.each do |jobs|
-    resp = gengo.postTranslationJobs({jobs: jobs, as_group: 0})
+    resp = gengo.postTranslationJobs({jobs: jobs, as_group: 1})
     order_id = resp["response"]["order_id"]
     job_count = resp["response"]["job_count"]
     order = GengoOrder.create(order_id: order_id, available_job_count: job_count)
