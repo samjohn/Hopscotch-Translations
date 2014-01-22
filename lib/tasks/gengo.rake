@@ -38,10 +38,20 @@ namespace :gengo do
     # sync_local_jobs_with_translations
   # end
   #
+  desc "Resync foreign words"
+  task pull_translations_for_untranslated_foreign_words: :environment do
+    ForeignWord.untranslated.each do |word|
+      job = word.gengo_job
+      job.try(:sync_with_foreign_word, gengo_for_env)
+    end
+
+  end
+
+
   desc "Make sure all gengo jobs actually set the translated string on foreign words"
   task resync_all: :environment do
     GengoJob.approved.each do |job|
-      job.sync_with_foreign_word(gengo_for_env)
+      job.sync_with_gengo_and_foreign_word(gengo_for_env)
     end
   end
 
