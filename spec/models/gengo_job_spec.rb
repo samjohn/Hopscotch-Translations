@@ -37,6 +37,7 @@ describe GengoJob do
     context "job is available" do
       before do
         job_response["response"]["job"]["status"] = GengoJob::STATUS_AVAILABLE
+
       end
 
       it "should update the jobs status based on gengo" do
@@ -62,6 +63,27 @@ describe GengoJob do
         let(:foreign_word) {
           ForeignWord.create(translatable_string: translatable_string, language: "cs")
         }
+
+        context "there is a previous job-foreign_word relationship" do
+          it "should keep the same foreign word" do
+            job.foreign_word = foreign_word
+            job.save
+            gengo.better_receive(getTranslationJob).and_return(job_response)
+            expect(foreign_word).to be_persisted
+            job.sync_with_gengo_and_foreign_word(gengo)
+            expect(job.reload.foreign_word).to eq(foreign_word)
+          end
+
+          it "should save the translated_string" do
+            job_response["response"]["job"]["body_tgt"] = translated_string
+            job.foreign_word = foreign_word
+            job.save
+            gengo.better_receive(getTranslationJob).and_return(job_response)
+            expect(foreign_word).to be_persisted
+            job.sync_with_gengo_and_foreign_word(gengo)
+            expect(foreign_word.reload.translated_string).to eq(translated_string)
+          end
+        end
 
         context "there is no previous job-foreign_word relationship" do
           it "should set the job's foreign word" do

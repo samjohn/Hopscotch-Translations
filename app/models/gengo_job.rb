@@ -64,6 +64,7 @@ class GengoJob < ActiveRecord::Base
     self.foreign_word ||= self.build_foreign_word(language: language,
                                                   translatable_string: translatable_string)
     self.foreign_word.translated_string = translated_string
+    self.foreign_word.save
     self.completed = self.status == GengoJob::STATUS_APPROVED
     save
   end
