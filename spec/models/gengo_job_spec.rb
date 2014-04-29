@@ -108,7 +108,7 @@ describe GengoJob do
     let(:gengo) { GENGO_SANDBOX }
     let(:translatable_string) { "Variables" }
     let(:translated_string) { "Variables Translation" }
-    let(:language) { "cs" }
+    let(:language) { "es" }
 
     let(:job_response) {
       {"opstat"=>"ok",
