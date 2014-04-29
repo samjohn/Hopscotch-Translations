@@ -10,4 +10,4 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 - run rake db:translate to translate all the new words that are not translated yet
 - wait for stuff to be translated
 - run rake gengo:sync_all
-- then you need to run rake gengo:resync_all which is really slow I don't think it works right but it does end up translating stuff
+- everything should be translated now, if not start reading the code! 
