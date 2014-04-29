@@ -3,6 +3,7 @@ class GengoJob < ActiveRecord::Base
   STATUS_APPROVED = "approved"
   validates_uniqueness_of :job_id
   scope :approved, -> { where(status: STATUS_APPROVED) }
+  scope :latest_week, -> { where("created_at > ?", 1.week.ago) }
   scope :available, -> { where("status != ?", STATUS_APPROVED) }
   scope :unsynced, -> { where(completed: false) }
   scope :locally_unsynced, -> { where("foreign_word_id IS NULL") }
@@ -34,7 +35,6 @@ class GengoJob < ActiveRecord::Base
 
     foreign_word = ForeignWord.where(language: language,
                                      translatable_string: translatable_string).first
-
     foreign_word ||= self.build_foreign_word(language: language,
                                                   translatable_string: translatable_string)
 

@@ -50,7 +50,7 @@ namespace :gengo do
 
   desc "Make sure all gengo jobs actually set the translated string on foreign words"
   task resync_all: :environment do
-    GengoJob.approved.each do |job|
+    GengoJob.approved.latest_week.each do |job|
       job.sync_with_gengo_and_foreign_word(gengo_for_env)
     end
   end
