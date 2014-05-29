@@ -10,5 +10,7 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 - `heroku run rake db:seed` to seed your database from the Localizable.strings files in s3
 - `heroku run rake gengo:translate` to translate all the new words that are not translated yet
 - wait for stuff to be translated
-- run rake gengo:sync_all
+- `heroku run rake gengo:sync_all`
+- `heroku run rake localizable_strings:write`
+- Now your translations should be in the AWS bucket
 - everything should be translated now, if not start reading the code! 
