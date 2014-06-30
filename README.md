@@ -14,3 +14,11 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 - `heroku run rake localizable_strings:write`
 - Now your translations should be in the AWS bucket
 - everything should be translated now, if not start reading the code! 
+
+### Translating Release Notes
+* Get heroku access from Sam and set up heroku as a remote 
+* Add the release notes to the translations website (form at the end of the english words list)
+* `heroku run rake gengo:translate`
+* Wait for translations to finish
+* Check on gengo.com that the translations are finished (get username and password from Sam)
+* `heroku run rake gengo:sync_all`
