@@ -22,3 +22,7 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 * Wait for translations to finish
 * Check on https://gengo.com/c/dashboard/ that the translations are finished (get username and password from Sam)
 * `heroku run rake gengo:sync_all`
+
+
+### Setting up translations locally.
+* Make sure you set up config/application.yml (Ask Sam for help)
