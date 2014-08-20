@@ -4,6 +4,8 @@ Hopscotch-Translations
 App for interacting with gengo to translate Hopscotch localizable.strings files
 
 
+# Note: if you are experiencing errors, the first thing to check is whether you are out of money on Gengo
+
 ### Getting Started
 - Add the english Localizable.strings to s3
 - Make sure the permissions allow reading by anyone
