@@ -7,15 +7,17 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 # Note: if you are experiencing errors, the first thing to check is whether you are out of money on Gengo
 
 ### Getting Started
-- Add the english Localizable.strings to s3
-- Make sure the permissions allow reading by anyone
-- `heroku run rake db:seed` to seed your database from the Localizable.strings files in s3
-- `heroku run rake gengo:translate` to translate all the new words that are not translated yet
-- wait for stuff to be translated
-- `heroku run rake gengo:sync_all`
-- `heroku run rake localizable_strings:write`
-- Now your translations should be in the AWS bucket
-- everything should be translated now, if not start reading the code! 
+
+1. Do `./hs_genstrings` from the iPad app's directory to generate the new strings file.
+2. Add the english Localizable.strings to s3
+3. Make sure the permissions allow reading by anyone
+4. `heroku run rake db:seed` to seed your database from the Localizable.strings files in s3
+5. `heroku run rake gengo:translate` to translate all the new words that are not translated yet
+6. Wait for stuff to be translated
+7. `heroku run rake gengo:sync_all`
+8. `heroku run rake localizable_strings:write`
+9. Now your translations should be in the AWS bucket.
+10. Everything should be translated now, if not start reading the code! 
 
 ### Translating Release Notes
 * Get heroku access from Sam and set up heroku as a remote 
