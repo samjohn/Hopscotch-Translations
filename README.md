@@ -8,7 +8,8 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 
 ### Getting Started
 
-1. Do `./hs_genstrings` from the iPad app's directory to generate the new strings file.
+1. Do `./hs_genstrings` from the iPad app's directory to generate the new strings file. 
+(You can ignore the error: Bad entry in file Hopscotch/Helpers/HSHelp.m (line = 56): Argument is not a literal string.)
 2. Add the english Localizable.strings to s3 in `hopscotchtranslations/production/en.lproj`
 3. Make sure the permissions allow reading by anyone
 4. `heroku run rake db:seed` to seed your database from the Localizable.strings files in s3
