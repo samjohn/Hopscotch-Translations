@@ -18,6 +18,7 @@ App for interacting with gengo to translate Hopscotch localizable.strings files
 8. `heroku run rake localizable_strings:write`
 9. Now your translations should be in the AWS bucket.
 10. Everything should be translated now, if not start reading the code! 
+11. Copy the contents of es.lproj and zh-Hans.lproj `hopscotchtranslations/production/en.lproj` into local `hopscotch-iPad/en.lproj`
 
 ### Translating Release Notes
 * Get heroku access from Sam and set up heroku as a remote 
