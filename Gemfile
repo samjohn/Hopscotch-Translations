@@ -8,16 +8,13 @@ gem 'gengo'
 gem 'slim-rails'
 gem 'transloadit'
 gem 'rails_12factor'
+gem "pg"
 
 group :development, :test do
-  gem 'sqlite3'
   gem 'better_errors'
   gem 'pry'
 end
 
-group :production do
-  gem "pg"
-end
 
 group :test do
   gem 'rspec-rails'

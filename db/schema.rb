@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20131119194423) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "english_words", force: true do |t|
     t.text     "translatable_string"
     t.text     "comment"
@@ -21,7 +24,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
     t.boolean  "non_app_string"
   end
 
-  add_index "english_words", ["translatable_string"], name: "index_english_words_on_translatable_string", unique: true
+  add_index "english_words", ["translatable_string"], name: "index_english_words_on_translatable_string", unique: true, using: :btree
 
   create_table "foreign_word_job_relations", force: true do |t|
   end
@@ -33,7 +36,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
     t.datetime "updated_at"
   end
 
-  add_index "foreign_words", ["translatable_string", "language"], name: "index_foreign_words_on_translatable_string_and_language", unique: true
+  add_index "foreign_words", ["translatable_string", "language"], name: "index_foreign_words_on_translatable_string_and_language", unique: true, using: :btree
 
   create_table "gengo_jobs", force: true do |t|
     t.string   "job_id"
@@ -45,7 +48,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
     t.integer  "foreign_word_id"
   end
 
-  add_index "gengo_jobs", ["job_id"], name: "index_gengo_jobs_on_job_id", unique: true
+  add_index "gengo_jobs", ["job_id"], name: "index_gengo_jobs_on_job_id", unique: true, using: :btree
 
   create_table "gengo_orders", force: true do |t|
     t.string   "order_id"
@@ -55,7 +58,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
     t.integer  "available_job_count"
   end
 
-  add_index "gengo_orders", ["order_id"], name: "index_gengo_orders_on_order_id", unique: true
+  add_index "gengo_orders", ["order_id"], name: "index_gengo_orders_on_order_id", unique: true, using: :btree
 
   create_table "submissions", force: true do |t|
     t.text     "translated_string"
