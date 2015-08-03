@@ -1,1 +1,8 @@
-= render "/shared/foreign_word_display", words: @words
+table
+  thead
+    tr
+      th Word
+      th Translation
+      th Notes
+  = render "/shared/foreign_word_display", words: @untranslated
+  = render "/shared/foreign_word_display", words: @translated

@@ -25,16 +25,16 @@ class ForeignWordsController < ApplicationController
   def language
     lang = params[:language]
 
-    @words = ForeignWord.where("language=?", lang)
-    @words = @words.select do |word|
-      word.valid?
-    end
-
-    @words.sort! do |word1, word2|
-      if (word1.translated_string.blank? )
-        -1
-      else
-        1
+    @words = ForeignWord.includes(:submissions, :english_word).where("language=?", lang)
+    @untranslated = []
+    @translated = []
+    @words.each do |word|
+      if word.valid?
+        if word.translated_string.blank?
+          @untranslated << word
+        else
+          @translated << word
+        end
       end
     end
   end
