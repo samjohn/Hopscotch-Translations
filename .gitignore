@@ -14,3 +14,4 @@
 /config/application.yml
 .DS_Store
 tags
+latest.dump
