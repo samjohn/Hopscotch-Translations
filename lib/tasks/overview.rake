@@ -6,5 +6,5 @@ end
 
 desc "Pull the files from S3 then send them to gengo for translation"
 task do_translations: :environment do
-  puts `bundle exec rake db:seed gengo:translate_all`
+  puts `bundle exec rake db:seed gengo:translate`
 end
