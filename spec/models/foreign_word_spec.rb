@@ -138,6 +138,13 @@ describe ForeignWord do
         expected_string = "\"Foo\" = \"Bar\";"
         expect(foreign_word.localizable_string).to eq(expected_string)
       end
+
+      it "should strip newlines from the end of the file" do
+        line = "\"Foo\" = \"Bar\n\";"
+        foreign_word = ForeignWord.create_foreign_word_from_data(line, language)
+        expected_string = "\"Foo\" = \"Bar\";"
+        expect(foreign_word.localizable_string).to eq(expected_string)
+      end
     end
 
     context "the word has not been translated" do

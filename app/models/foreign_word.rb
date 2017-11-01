@@ -73,7 +73,7 @@ class ForeignWord < ActiveRecord::Base
   def translated_string
     string = submissions.first.try(:translated_string)
     return nil unless string
-    string.gsub(/\"/, "\\\"")
+    string.gsub(/\"/, "\\\"").gsub(/\n\z/, "")
   end
 
   def translated_string=(_translated_string)
