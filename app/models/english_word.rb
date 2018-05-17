@@ -43,8 +43,8 @@ class EnglishWord < ActiveRecord::Base
     comment_split = line.split("*")
     comment = comment_split[1]
 
-    word_split = line.split("=")
-    english = word_split.last.split("\"").last
+    word_split = line.split("*").last.split("=")
+    english = word_split.first
 
     if !english.match(/\n/)
       e = self.new(comment: comment, translatable_string: english)
