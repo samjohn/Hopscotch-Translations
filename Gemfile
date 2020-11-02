@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-
+ruby '2.6.6'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4'
 
@@ -8,7 +8,8 @@ gem 'gengo'
 gem 'slim-rails'
 gem 'transloadit'
 gem 'rails_12factor'
-gem "pg"
+gem 'pg', '~> 0.21'
+
 
 group :development, :test do
   gem 'better_errors'

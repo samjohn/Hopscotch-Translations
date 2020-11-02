@@ -76,7 +76,7 @@ GEM
     multi_json (1.10.0)
     multipart-post (2.0.0)
     netrc (0.10.3)
-    pg (0.17.1)
+    pg (0.21.0)
     polyglot (0.3.4)
     pry (0.9.12.6)
       coderay (~> 1.0)
@@ -184,7 +184,7 @@ DEPENDENCIES
   gengo
   jbuilder (~> 1.0.1)
   jquery-rails
-  pg
+  pg (~> 0.21)
   pry
   rails (~> 4)
   rails_12factor
@@ -196,5 +196,8 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.0.3)
 
+RUBY VERSION
+   ruby 2.6.6p146
+
 BUNDLED WITH
-   1.16.0
+   1.17.3
