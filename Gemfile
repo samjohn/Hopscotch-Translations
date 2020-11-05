@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 ruby '2.6.6'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 4'
+gem 'rails'
 
 gem 'figaro'
 gem 'gengo'
@@ -9,10 +9,12 @@ gem 'slim-rails'
 gem 'transloadit'
 gem 'rails_12factor'
 gem 'pg', '~> 0.21'
+gem 'responders', '~> 2.0'
 
 
 group :development, :test do
   gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'pry'
   gem 'sqlite3'
 end
@@ -26,13 +28,13 @@ end
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 4.0.0'
-  gem 'coffee-rails', '~> 4.0.0'
+  gem 'sass-rails'
+  gem 'coffee-rails'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', platforms: :ruby
 
-  gem 'uglifier', '>= 1.0.3'
+  gem 'uglifier'
 end
 
 gem 'jquery-rails'

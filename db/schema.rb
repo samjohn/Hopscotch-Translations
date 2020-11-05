@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "english_words", force: true do |t|
+  create_table "english_words", force: :cascade do |t|
     t.text     "translatable_string"
     t.text     "comment"
     t.datetime "created_at"
@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(version: 20131119194423) do
 
   add_index "english_words", ["translatable_string"], name: "index_english_words_on_translatable_string", unique: true, using: :btree
 
-  create_table "foreign_word_job_relations", force: true do |t|
+  create_table "foreign_word_job_relations", force: :cascade do |t|
   end
 
-  create_table "foreign_words", force: true do |t|
+  create_table "foreign_words", force: :cascade do |t|
     t.text     "translatable_string"
     t.string   "language"
     t.datetime "created_at"
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
 
   add_index "foreign_words", ["translatable_string", "language"], name: "index_foreign_words_on_translatable_string_and_language", unique: true, using: :btree
 
-  create_table "gengo_jobs", force: true do |t|
+  create_table "gengo_jobs", force: :cascade do |t|
     t.string   "job_id"
     t.boolean  "completed",       default: false
     t.string   "order_id"
@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
 
   add_index "gengo_jobs", ["job_id"], name: "index_gengo_jobs_on_job_id", unique: true, using: :btree
 
-  create_table "gengo_orders", force: true do |t|
+  create_table "gengo_orders", force: :cascade do |t|
     t.string   "order_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(version: 20131119194423) do
 
   add_index "gengo_orders", ["order_id"], name: "index_gengo_orders_on_order_id", unique: true, using: :btree
 
-  create_table "submissions", force: true do |t|
+  create_table "submissions", force: :cascade do |t|
     t.text     "translated_string"
     t.string   "contributor"
     t.datetime "created_at"

@@ -3,7 +3,14 @@ tbody
     tr
       td= word.translatable_string
       td
-        = best_in_place(word, :translated_string, html_attrs: { class: "foo"}, activator: "#edit-#{word.id}" )
-        = image_tag("pencil.png", id: "edit-#{word.id}", class: "edit")
+        - activator = "edit-translated_string-#{word.id}"
+        - url = foreign_word_path(word)
+        = best_in_place(word, :translated_string, url: url, activator: "##{activator}" )
+        = image_tag("pencil.png", id: activator, class: "edit")
+        p.title-label
+
       td= word.comment
 
+  / - activator = "edit-#{field}-#{item.id}"
+  / = best_in_place(item, field, url: path, activator: "##{activator}" )
+  / = image_tag("icons/pencil.png", id: activator, class: "edit")

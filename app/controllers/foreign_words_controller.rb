@@ -46,9 +46,9 @@ class ForeignWordsController < ApplicationController
     attrs.permit!
 
     if f.update_attributes(attrs)
-      render text: "success"
+      render json:  {status: "success" }
     else
-      render text: 'fail'
+      render json:  {status: "fail" }
     end
 
   end

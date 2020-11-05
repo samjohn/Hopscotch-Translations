@@ -13,10 +13,11 @@ class EnglishWordsController < ApplicationController
     attrs.permit!
 
     e = EnglishWord.new(attrs)
-    if (e.save!)
-      redirect_to english_words_path
+    @english = EnglishWord.all
+    if (e.save)
+      render :index
     else
-      flash :error, e.errors.full_messages
+      flash[:error] = e.errors.full_messages
       render :index
     end
   end
